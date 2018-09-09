@@ -1,0 +1,28 @@
+{% extends "frontend/base.html" %}
+{% block styles %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/sc-1.5.0/datatables.min.css"/>
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container-fluid">
+            <table id="message-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Channel</th>
+                    <th>Message</th>
+                    <th>Remove</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page-scripts %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/sc-1.5.0/datatables.min.js">
+    </script>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'js/messages.js' %}"></script>
+{% endblock %}

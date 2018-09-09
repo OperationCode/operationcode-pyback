@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+boto3 = "*"
+django = "*"
+django-recaptcha2 = "*"
+djangorestframework = "*"
+djangorestframework-filters = "*"
+django-storages = "*"
+django-widget-tweaks = "*"
+gunicorn = "*"
+Jinja2 = "*"
+pillow = "*"
+python-decouple = "*"
+python-dotenv = "*"
+psycopg2-binary = "*"
+requests = "*"
+slack-sansio = "*"
+"slack-sansio[requests]" = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"

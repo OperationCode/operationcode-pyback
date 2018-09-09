@@ -1,0 +1,74 @@
+{% extends "frontend/base.html" %}
+{% load recaptcha2 %}
+{% block header_extra %}
+    {% recaptcha_init %}
+{% endblock %}
+
+{% block content %}
+    {% load widget_tweaks %}
+    <div class="container-fluid">
+
+        <div class="card mt-5">
+
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for hidden_field in form.hidden_fields %}
+                    {{ hidden_field }}
+                {% endfor %}
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == 'rep_name' %}
+                                </div>
+                                <div class="col-md-4 col-md-offset-4">
+                            {% endif %}
+                            {% if field|field_type == 'charfield' %}
+                                <div class="form-group input-field">
+                                    {{ field.label_tag }}
+                                    {% render_field field class="form-control" %}
+                                    {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {% if field|field_type == 'booleanfield' %}
+                                <label class="form-control-label"
+                                       for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <div class="switch">
+                                    <label>
+                                        No
+                                        {% render_field field class="form-control mb-4" %}
+                                        <span class="lever"></span>
+                                        Yes
+                                    </label>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    <div class="col-md-4 col-md-offset-4">
+                        <legend>School Logo</legend>
+
+                        <div class="form-group input-field">
+                            <div class="row">
+                                {{ form.logo }}
+                            </div>
+                            <div class="row">
+                                <img id="image"/>
+                            </div>
+                        </div>
+                        <div class="form-group input-field">
+                            {{ form.recaptcha }}
+                        </div>
+                        <div class="form-group input-field">
+                            <input type="submit" class="btn btn-primary" value="Submit">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block page-scripts %}
+    {% load static %}
+    <script src="{% static 'js/codeschool.js' %}"></script>
+{% endblock %}

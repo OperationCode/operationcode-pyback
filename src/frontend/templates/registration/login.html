@@ -1,0 +1,33 @@
+{% extends "frontend/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <div class="card mt-5 auth-card">
+        <form class="text-center border border-light p-5" method="POST"
+              name="login_user_form">
+            <p class="h4 mb-4">Sign in</p>
+            <div class="card-body px-lg-5 pt-0">
+                {% csrf_token %}
+
+                <div class="md-form form-group required">
+                    {{ form.username.label_tag }}
+                    {% render_field form.username class='form-control' %}
+                </div>
+
+
+                <div class="md-form form-group required">
+                    {{ form.password.label_tag }}
+                    {% render_field form.password class='form-control' %}
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-info">Sign in</button>
+              <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+    </div>
+{% endblock %}
+
+
+<div class="invalid-feedback">
+    Please choose a username.
+</div>
