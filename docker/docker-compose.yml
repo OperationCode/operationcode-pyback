@@ -8,12 +8,12 @@ services:
       dockerfile: docker/Dockerfile
     container_name: pyback01
     env_file:
-      - example.env
-      - pyback.env
+    - example.env
+    - pyback.env
     volumes:
     - ../src:/src
-    expose:
-    - 8000
+    ports:
+    - 8000:8000
     depends_on:
     - db
 
@@ -22,22 +22,10 @@ services:
     image: pybot:latest
     container_name: pybot01
     env_file:
-      - example.env
-      - pybot.env
+    - example.env
+    - pybot.env
     ports:
     - 5000:5000
-
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx01
-    ports:
-    - 8000:8000
-    volumes:
-    - ../src:/src
-    - ../config/nginx:/etc/nginx/conf.d
-    depends_on:
-    - pyback
 
 
   db:
