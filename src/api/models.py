@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class UserInfo(models.Model):
@@ -20,3 +22,16 @@ class Channel(models.Model):
 
     def __str__(self):
         return f'{self.name} - {self.channel_id}'
+
+
+@receiver(post_save, sender=User)
+def create_user_info(sender, instance, created, **kwargs):
+    """
+    Function creates an empty UserInfo attached to the created User if Slack_ID
+    isn't provided upon User creation
+    """
+    if created:
+        try:
+            instance.userinfo
+        except UserInfo.DoesNotExist:
+            UserInfo.objects.create(user=instance)

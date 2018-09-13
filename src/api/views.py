@@ -1,32 +1,32 @@
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from .services import get_messages, delete
 from .serializers import ChannelSerializer, UserSerializer, UserInfoSerializer
 from .models import Channel, UserInfo
 
 
-class ChannelViewSet(ModelViewSet):
+class ChannelViewSet(ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = ChannelSerializer
     queryset = Channel.objects.all()
 
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
 
-class UserInfoViewSet(ModelViewSet):
+class UserInfoViewSet(ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserInfoSerializer
-    queryset = UserInfo.objects.all()
+    queryset = UserInfo.objects.all().select_related('user')
 
 
-class UserModsList(ModelViewSet):
+class UserModsList(ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = ChannelSerializer
     queryset = Channel.objects.all()
