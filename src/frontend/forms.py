@@ -1,8 +1,14 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import CharField, BooleanField, ImageField
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 from django.conf import settings
+
+def image_validator(file):
+    image = file.image
+    if image.width != 200 or image.height != 200:
+        raise ValidationError('Image must be 200x200')
 
 
 class CodeSchoolForm(forms.Form):
@@ -26,6 +32,8 @@ class CodeSchoolForm(forms.Form):
     zipcode = CharField(label='Zipcode')
     country = CharField(label='Country')
 
-    logo = ImageField(label='Logo')
+    logo = ImageField(label='Logo', validators=[image_validator])
 
     recaptcha = ReCaptchaField(private_key=settings.RECAPTCHA_PRIVATE_KEY, widget=ReCaptchaWidget())
+
+

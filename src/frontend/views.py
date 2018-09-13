@@ -30,7 +30,6 @@ class CodeschoolFormView(FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print(form)
         return super().form_invalid(form)
 
 
