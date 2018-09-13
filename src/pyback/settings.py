@@ -10,22 +10,50 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 import os
+
 from decouple import config
+from dotenv import load_dotenv
+from pathlib import Path
 
 # Build paths inside the pyback like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+url = Path(os.path.dirname(BASE_DIR)) / 'docker' / 'pyback.env'
+load_dotenv(dotenv_path=url)
+
+if 'aws' in config('ENVIRONMENT', 'local'):
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_REGION_NAME = config('BUCKET_REGION_NAME')  # e.g. us-east-2
+    AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_DEFAULT_ACL = None
+    AWS_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+
+    STATICFILES_LOCATION = 'static'
+    MEDIAFILES_LOCATION = 'media'
+    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+
+else:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
 SECRET_KEY = config('SECRET_KEY', '3c!e@=v*#u_#at^atmv@zkg&v%$b-&5($v=j+826+q@o3*xrc%')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', False, cast=bool)
 
+EXTRA_HOSTS = config('EXTRA_HOSTS', 'localhost', cast=lambda v: [s.strip() for s in v.split(',')])
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'pyback.ngrok.io', 'pyback',
-                 'pyback-lb-1460262385.us-east-2.elb.amazonaws.com', 'web']
+                 'pyback-lb-197482116.us-east-2.elb.amazonaws.com',
+                 'pyback-lb-1460262385.us-east-2.elb.amazonaws.com', 'web'] + EXTRA_HOSTS
 
+# Necessary to allow AWS health check to succeed
 try:
     import socket
 
@@ -34,8 +62,6 @@ try:
 except Exception as ex:
     print(ex)
 
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,18 +69,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
     'widget_tweaks',
     'snowpenguin.django.recaptcha2',
+    'debug_toolbar',
     'storages',
-    'rest_framework',
-    'rest_framework_filters',
-    'rest_framework.authtoken',
     'frontend',
     'api',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,9 +111,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pyback.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': config('DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -109,7 +133,6 @@ REST_FRAMEWORK = {
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -125,9 +148,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -138,38 +158,19 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-
-AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='bucket')
-AWS_S3_REGION_NAME = config('BUCKET_REGION_NAME', default='')  # e.g. us-east-2
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY', default='')
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-AWS_DEFAULT_ACL = None
-AWS_LOCATION = 'static'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
-STATICFILES_LOCATION = 'static'
-STATICFILES_STORAGE = 'custom_storages.StaticStorage'
-
-MEDIAFILES_LOCATION = 'media'
-DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
-
 # App-Specific Configs
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login'
+
 GITHUB_REPO = config('GITHUB_REPO', '')
 GITHUB_JWT = config('GITHUB_JWT', 'jwt')
 
 SLACK_TOKEN = config('SLACK_TOKEN', 'default-token')
 BOT_NAME = config('BOT_NAME', 'test2-bot')
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = '/accounts/login'
-
 RECAPTCHA_PUBLIC_KEY = config('RECAPTCHA_PUBLIC_KEY', 'MyRecaptchaKey123')
 RECAPTCHA_PRIVATE_KEY = config('RECAPTCHA_PRIVATE_KEY', 'MyRecaptchaPrivateKey456')
+
+if DEBUG:
+    INTERNAL_IPS = ['127.0.0.1']

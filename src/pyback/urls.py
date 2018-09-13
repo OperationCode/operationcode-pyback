@@ -25,4 +25,11 @@ urlpatterns = [
     path('', include('frontend.urls')),
 ]
 
-# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# Serves static files locally if DEBUG is True
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns += [
+        *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]
