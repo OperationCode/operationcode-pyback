@@ -8,7 +8,6 @@ boto3 = "*"
 django = "*"
 django-recaptcha2 = "*"
 djangorestframework = "*"
-djangorestframework-filters = "*"
 django-storages = "*"
 django-widget-tweaks = "*"
 gunicorn = "*"
@@ -16,12 +15,14 @@ Jinja2 = "*"
 pillow = "*"
 python-decouple = "*"
 python-dotenv = "*"
+psycopg2 = "*"
 psycopg2-binary = "*"
 requests = "*"
 slack-sansio = "*"
 "slack-sansio[requests]" = "*"
 
-[dev-packages]
-
 [requires]
 python_version = "3.6"
+
+[dev-packages]
+django-debug-toolbar = "*"
