@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .services import get_messages, delete
 from .serializers import ChannelSerializer, UserSerializer, UserInfoSerializer

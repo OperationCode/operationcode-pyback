@@ -21,8 +21,11 @@ requests = "*"
 slack-sansio = "*"
 "slack-sansio[requests]" = "*"
 
+[dev-packages]
+pytest = "*"
+pytest-django = "*"
+django-debug-toolbar = "*"
+
+
 [requires]
 python_version = "3.6"
-
-[dev-packages]
-django-debug-toolbar = "*"
