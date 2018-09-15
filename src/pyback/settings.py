@@ -9,15 +9,14 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
+from dotenv import load_dotenv
+from decouple import config
+from pathlib import Path
 import os
 
-from decouple import config
-from dotenv import load_dotenv
-from pathlib import Path
-
-# Build paths inside the pyback like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# loads configs when running locally
 url = Path(os.path.dirname(BASE_DIR)) / 'docker' / 'pyback.env'
 load_dotenv(dotenv_path=url)
 

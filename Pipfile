@@ -16,7 +16,6 @@ pillow = "*"
 python-decouple = "*"
 python-dotenv = "*"
 psycopg2 = "*"
-psycopg2-binary = "*"
 requests = "*"
 slack-sansio = "*"
 "slack-sansio[requests]" = "*"
@@ -25,7 +24,6 @@ slack-sansio = "*"
 pytest = "*"
 pytest-django = "*"
 django-debug-toolbar = "*"
-
 
 [requires]
 python_version = "3.6"
