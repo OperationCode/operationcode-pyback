@@ -36,15 +36,27 @@ services:
     - postgres_data:/var/lib/postgresql/data/
 
 
-  ngrok:
+  ngrok-pybot:
     image: wernight/ngrok:latest
     env_file:
     - example.env
     - ngrok.env
     environment:
     - NGROK_PORT=pybot:5000
+    - NGROK_SUBDOMAIN=pybot
     ports:
     - 4040:4040
+
+  ngrok-pyback:
+    image: wernight/ngrok:latest
+    env_file:
+    - example.env
+    - ngrok.env
+    environment:
+    - NGROK_PORT=pyback:8000
+    - NGROK_SUBDOMAIN=pyback
+    ports:
+    - 4050:4040
 
 
 volumes:
