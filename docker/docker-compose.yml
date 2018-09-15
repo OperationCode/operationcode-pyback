@@ -27,6 +27,7 @@ services:
     ports:
     - 5000:5000
 
+
   db:
     image: postgres:10.1-alpine
     container_name: pg01
@@ -46,6 +47,7 @@ services:
     - NGROK_SUBDOMAIN=pybot
     ports:
     - 4040:4040
+
 
   ngrok-pyback:
     image: wernight/ngrok:latest
