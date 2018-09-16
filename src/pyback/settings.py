@@ -166,6 +166,7 @@ GITHUB_REPO = config('GITHUB_REPO', '')
 GITHUB_JWT = config('GITHUB_JWT', 'jwt')
 
 SLACK_TOKEN = config('SLACK_TOKEN', 'default-token')
+SLACK_BOT_TOKEN = config('SLACK_BOT_TOKEN', SLACK_TOKEN)
 BOT_NAME = config('BOT_NAME', 'test2-bot')
 
 RECAPTCHA_PUBLIC_KEY = config('RECAPTCHA_PUBLIC_KEY', 'MyRecaptchaKey123')

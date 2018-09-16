@@ -93,7 +93,9 @@ def _call_slack_api(data):
 def delete(ts: str, channel: str):
     data = {
         'ts': ts,
-        'channel': channel
+        'channel': channel,
+        'token': settings.SLACK_BOT_TOKEN
     }
-    res = slack_client.query(methods.CHAT_DELETE, data=data)
-    return res
+    url, *other = methods.CHAT_DELETE.value
+    res = requests.get(url, params=data)
+    return res.json()
