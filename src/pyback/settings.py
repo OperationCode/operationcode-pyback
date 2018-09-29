@@ -9,10 +9,14 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
+import logging
+
 from dotenv import load_dotenv
 from decouple import config
 from pathlib import Path
 import os
+
+from .log import HealthCheckFilter
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -174,3 +178,5 @@ RECAPTCHA_PRIVATE_KEY = config('RECAPTCHA_PRIVATE_KEY', 'MyRecaptchaPrivateKey45
 
 if DEBUG:
     INTERNAL_IPS = ['127.0.0.1']
+
+logging.getLogger().addFilter(HealthCheckFilter())
