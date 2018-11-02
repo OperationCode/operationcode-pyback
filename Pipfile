@@ -19,6 +19,8 @@ psycopg2 = "*"
 requests = "*"
 slack-sansio = "*"
 "slack-sansio[requests]" = "*"
+pyyaml = "*"
+websocket = "*"
 
 [dev-packages]
 pytest = "*"
@@ -26,4 +28,7 @@ pytest-django = "*"
 django-debug-toolbar = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

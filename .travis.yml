@@ -1,33 +1,28 @@
 env:
   global:
   - IMAGE_NAME=pyback
-  - DEPLOY_BRANCHES="master"
+  - DEPLOY_BRANCHES="master staging"
   - AWS_REGION=us-east-2
   - REMOTE_IMAGE_URL=633607774026.dkr.ecr.us-east-2.amazonaws.com/pyback
   - ECS_CLUSTER_MASTER=python-oc-services
+  - ECS_CLUSTER_STAGING=python-oc-services
   - ECS_SERVICE_MASTER=pyback-svc
+  - ECS_SERVICE_STAGING=pyback-svc-staging
   - secure: iJv9zwNPA6EeLgTUhiaTq3YnoSPILqz5Oerl1XoAbL6F5kcXrtY1/mw8BnqdgM7QIr7Q6fi75L1Ts2jBsi0IU/4FtlhRKuaMqlmCBd8z52Mb+KEGP3YJhfPceq5raVqIjc5nHikd2CsGdtSr6gFfNaRITvHqwaUs8owF5eMQX6irxnnWVmz47mKwxZ251vGQGyEukAYQRcIwzjr2dnA94E+tj2pTaCXJO4sBc9BqeDO+rYQCWc1yivhHxx0Zr/JuR/jceNjNL2rZa41GmHMlHenFcnseH84OQ/+/c7AmPLHcYmiTJIL1yY+sMS/PRhLOGzQnxIQvaA1LD8gEAY+YLn3Q6AgHveV28udfU7jzKQmgRqS4OeM1OhykknBcAdLo8k2gbVx73pO32Lgse0JL2S2jmr/yWBpYGoXJ/LeB4x+YG5mookGktRbwtb/RyPI/+W4DE8mgD/d5b0u6zXCwIQ1Xe78Lr4k+uo3mWMnjcvix2gLkPDwlW4zZ8UGe7M9XCkKuZnhxGUV3ijBuecIMBfABi1wGstXQzHLNtiul0ZPWUAeQxDoN+lr94aw+R0U9DcTHWtM2QXY77+olV7D9pnbPZKXB2QRfOpvS2jDQo4nXGCVV/UmCrYgC9sDQQD5u8QXqgJRHTb7Rl+9AKwl1C5u60sBRRpaneQlRBLOjWlo=
   - secure: MZlr2GanK4Je41ncRFHwJm8SyJ1yjPI3gKFdXb5xoVMdsKBnYbouz+5PG73Ri9oDnOYsY6c9lv6HrSSo6fO0fc/lyhZeKu34F288rAYPGJdg/Qn0c0xYsKug2qPAn+Oyl0BWjnfR5nSP7cdhRVwca84kVVfOWer6DP+bZZ2tJda5xKqyRFgvZRWZnrUegY/ciXtwjLswnwOX9VE9x0un29acsZvWDCRoGFM0P6SeM/aVYp+o5iJyw6mD8wtmLcw4kI6q3r6S2MbGJ+fefiUW70Of3oUD721aW2DYVkMd5pRgW3/VvW5km+UNo8zD9pffZLGev68hdyEA0Rhrw/qX5DinoS46HnSVlyJWdDUselYELumHAKdIjuWYMaW0sboN89mfNX0H1KaXT2Gc1+eO6nlmJLKwK2KQYULgQXkKoOOhCvvvw+uhMaqxjMp+oLcvwHt6s96KjlRGn7dNDnDePpWH7Pht0L1cYg9xnaeTKJfQm2N6cOQtLKHO/rBHYiEItG6O/kaQytokrU1tLo6Y5o3+8dybvulFha3xgq39oI0Mtp5fVbMM3wZOLQ5UqedYATMaoy4LamEiP0cvThlP5X5/TvyFcQxBu39EYWmaBcSPooncQVPoGyLzVAcfBQp3hOe0XbYKoY0VjHVWYbO2ghVXVax8CDJZ2feE5ghsdMQ=
 
-sudo: required
-
 os: linux
-
+sudo: required
 language: python
-
-python: 3.6
-
+dist: xenial
+python: 3.7
 cache: pip
-
 install:
 - pip install pipenv
 - pipenv install --system --deploy --dev
-
 script:
 - pytest
-
 services:
 - docker
-
 after_success:
 - bash bin/run.sh
