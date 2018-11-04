@@ -1,4 +1,3 @@
-# Create your views here.
 from typing import Tuple
 from urllib import parse
 import json
@@ -50,8 +49,7 @@ def get_logo_and_users(logo: InMemoryUploadedFile, url_root: str) -> Tuple[str, 
         users = '@wimo7083 @AllenAnthes,'
         logo_url = f'https://pyback.ngrok.io/static/media/logos/{school_logo}'
     else:
-        # users = '@hpjaj @wimo7083 @jhampton @kylemh @davidmolina @nellshamrell @hollomancer @maggi-oc'
-        users = ''
+        users = '@wimo7083 @jhampton @kylemh'
         logo_url = f'{url_root}static/logos/{school_logo}'
     return logo_url, users
 
@@ -64,6 +62,7 @@ def handle_submission(form: dict, url_root: str):
 
     params = make_params(**form, url_root=url_root)
     res = requests.post(url, headers=headers, data=json.dumps(params))
+    logger.info(f'response from github API call {res}')
 
 
 def make_params(logo, name, url, address1, city, state, zipcode, country, rep_name, rep_email, url_root, recaptcha='',
