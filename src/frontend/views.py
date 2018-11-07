@@ -1,13 +1,11 @@
-from typing import Tuple
-from urllib import parse
 import json
 import logging
-import os
-import requests
+from typing import Tuple
 
+import requests
+from django.conf import settings
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.views.generic import FormView, TemplateView
-from django.conf import settings
 
 from .forms import CodeSchoolForm
 
@@ -24,8 +22,8 @@ class CodeschoolFormView(FormView):
     success_url = f'https://github.com/{settings.GITHUB_REPO}/issues'
 
     def form_valid(self, form):
-        url_root = self.request.get_host()
-        handle_submission(form.cleaned_data, url_root)
+        form.save()
+        handle_submission(form.cleaned_data)
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -36,39 +34,31 @@ class BotMessagesView(TemplateView):
     template_name = 'frontend/messages.html'
 
 
-def save_logo(logo: InMemoryUploadedFile):
-    file_path = os.path.abspath(f'static/media/logos/{logo.name}')
-    with open(file_path, 'wb+') as destination:
-        for chunk in logo.chunks():
-            destination.write(chunk)
-
-
-def get_logo_and_users(logo: InMemoryUploadedFile, url_root: str) -> Tuple[str, str]:
-    school_logo = parse.quote(logo.name)
-    if settings.DEBUG:
+def get_logo_and_users(logo: InMemoryUploadedFile) -> Tuple[str, str]:
+    school_logo = logo.name.replace(' ', '_')
+    if settings.DEBUG or settings.PRE_PROD:
         users = '@wimo7083 @AllenAnthes,'
-        logo_url = f'https://pyback.ngrok.io/static/media/logos/{school_logo}'
     else:
         users = '@wimo7083 @jhampton @kylemh'
-        logo_url = f'{url_root}static/logos/{school_logo}'
+
+    logo_url = f'{settings.MEDIA_URL}logos/{school_logo}'
     return logo_url, users
 
 
-def handle_submission(form: dict, url_root: str):
-    save_logo(form['logo'])
+def handle_submission(form: dict):
     repo_path = settings.GITHUB_REPO
     url = f"https://api.github.com/repos/{repo_path}/issues"
     headers = {"Authorization": f"Bearer {settings.GITHUB_JWT}"}
 
-    params = make_params(**form, url_root=url_root)
+    params = make_params(**form)
     res = requests.post(url, headers=headers, data=json.dumps(params))
     logger.info(f'response from github API call {res}')
 
 
-def make_params(logo, name, url, address1, city, state, zipcode, country, rep_name, rep_email, url_root, recaptcha='',
+def make_params(logo, name, url, address1, city, state, zipcode, country, rep_name, rep_email, recaptcha='',
                 address2=None, fulltime=False, hardware=False, has_online=False, only_online=False, accredited=False,
                 housing=False, mooc=False):
-    logo_url, notify_users = get_logo_and_users(logo, url_root)
+    logo_url, notify_users = get_logo_and_users(logo)
 
     return ({
         'title': f'New Code School Request: {name}',

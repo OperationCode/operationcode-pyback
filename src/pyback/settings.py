@@ -31,6 +31,7 @@ if 'aws' in config('ENVIRONMENT', 'local'):
     AWS_DEFAULT_ACL = None
     AWS_LOCATION = 'static'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 
     STATICFILES_LOCATION = 'static'
     MEDIAFILES_LOCATION = 'media'
@@ -39,6 +40,7 @@ if 'aws' in config('ENVIRONMENT', 'local'):
 
 else:
     STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -47,6 +49,7 @@ else:
 SECRET_KEY = config('SECRET_KEY', '3c!e@=v*#u_#at^atmv@zkg&v%$b-&5($v=j+826+q@o3*xrc%')
 
 DEBUG = config('DEBUG', False, cast=bool)
+PRE_PROD = config('PRE_PROD', False, cast=bool)
 
 EXTRA_HOSTS = config('EXTRA_HOSTS', 'localhost', cast=lambda v: [s.strip() for s in v.split(',')])
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'pyback.ngrok.io', 'pyback',
