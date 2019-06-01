@@ -11,6 +11,10 @@
   <br />
 </div>
 
+# IMPORTANT
+This repo has been archived and its functionality merged into the new Python Backend located at https://github.com/OperationCode/back-end
+
+
 [![Build Status](https://travis-ci.org/OperationCode/operationcode-pyback.svg?branch=master)](https://travis-ci.org/OperationCode/operationcode-pyback)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Twitter Follow](https://img.shields.io/twitter/follow/operation_code.svg?style=social&label=Follow&style=social)](https://twitter.com/operation_code)
